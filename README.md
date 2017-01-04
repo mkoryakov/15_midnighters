@@ -1,6 +1,5 @@
 # Night Owls Detector
-
-[TODO. There will be project description]
+Скрипт вытаскивает имена пользователей ресурса https://devman.org, которые сдавали задачи на проверку в период с 00:00 до 06:00 часов.
 
 # Project Goals
 
