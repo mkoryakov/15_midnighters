@@ -3,6 +3,10 @@ import pytz
 from datetime import datetime, time
 
 
+MIDNIGHT = time(0, 0, 0)
+MORNING = time(6, 0, 0)
+
+
 def load_attempts():
     devman_url = 'https://devman.org/api/challenges/solution_attempts'
     payload = {'page': 1}
@@ -11,24 +15,20 @@ def load_attempts():
     for page in range(1, pages + 1):
         payload = {'page': page}
         devman_data = requests.get(devman_url, payload).json()
-        for user_data in devman_data['records']:
-            yield user_data
+        yield from devman_data['records']
 
 
 def get_midnighters():
-    midnighters = []
-    midnight = time(0, 0, 0)
-    morning = time(6, 0, 0)
+    midnighters = set()
     for user_data in load_attempts():
-        time_zone = pytz.timezone(user_data['timezone'])
-        if user_data['timestamp']:
-            utc_datetime = datetime.utcfromtimestamp(user_data['timestamp'])
-        else:
+        if not user_data['timestamp']:
             continue
+        time_zone = pytz.timezone(user_data['timezone'])
+        utc_datetime = datetime.utcfromtimestamp(user_data['timestamp'])
         localize_utc_datetime = pytz.utc.localize(utc_datetime)
         commit_time = localize_utc_datetime.astimezone(time_zone).time()
-        if midnight < commit_time < morning:
-            midnighters.append(user_data['username'])
+        if MIDNIGHT < commit_time < MORNING:
+            midnighters.add(user_data['username'])
     return midnighters
 
 
