@@ -5,7 +5,7 @@
     pip install -r requirements.txt
 
 ## Пример запуска скрипта
-seek\_dev_nighters.py
+    $ python seek\_dev_nighters.py
 
 ### Пример вывода результатов работы скрипта
     В ночное время сдавали задачи 3 человек:  
